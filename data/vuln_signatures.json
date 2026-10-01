@@ -1,0 +1,73 @@
+{
+  "version_rules": [
+    {
+      "product": "OpenSSH",
+      "max_version": "7.7",
+      "title": "Outdated OpenSSH (username enumeration class)",
+      "severity": "medium",
+      "cve": "CVE-2018-15473",
+      "recommendation": "Upgrade OpenSSH to 8.x+ and disable password auth in favour of keys.",
+      "references": ["https://nvd.nist.gov/vuln/detail/CVE-2018-15473"]
+    },
+    {
+      "product": "nginx",
+      "max_version": "1.20.0",
+      "title": "Outdated nginx",
+      "severity": "low",
+      "cve": null,
+      "recommendation": "Update nginx to a current stable release and review CVEs for the running version.",
+      "references": ["https://nginx.org/en/security_advisories.html"]
+    },
+    {
+      "product": "Apache",
+      "max_version": "2.4.49",
+      "title": "Apache httpd vulnerable to path traversal / RCE (2.4.49)",
+      "severity": "critical",
+      "cve": "CVE-2021-41773",
+      "recommendation": "Upgrade Apache httpd to 2.4.51 or later immediately.",
+      "references": ["https://nvd.nist.gov/vuln/detail/CVE-2021-41773"]
+    }
+  ],
+  "service_rules": [
+    {
+      "service": "redis",
+      "condition": "unauthenticated",
+      "title": "Redis exposed without authentication",
+      "severity": "high",
+      "recommendation": "Bind Redis to localhost, require a password, and enable protected-mode.",
+      "references": ["https://redis.io/docs/management/security/"]
+    },
+    {
+      "service": "elasticsearch",
+      "condition": "exposed",
+      "title": "Elasticsearch exposed on the network",
+      "severity": "high",
+      "recommendation": "Restrict access to Elasticsearch and enable authentication (X-Pack/security).",
+      "references": []
+    },
+    {
+      "service": "telnet",
+      "condition": "exposed",
+      "title": "Cleartext Telnet service exposed",
+      "severity": "high",
+      "recommendation": "Disable Telnet and use SSH instead. Telnet transmits credentials in cleartext.",
+      "references": []
+    },
+    {
+      "service": "ftp",
+      "condition": "exposed",
+      "title": "FTP service exposed (cleartext credentials)",
+      "severity": "medium",
+      "recommendation": "Prefer SFTP/FTPS. If FTP is required, disable anonymous access.",
+      "references": []
+    },
+    {
+      "service": "mongodb",
+      "condition": "exposed",
+      "title": "MongoDB exposed on the network",
+      "severity": "high",
+      "recommendation": "Enable authorization and bind to trusted interfaces only.",
+      "references": []
+    }
+  ]
+}

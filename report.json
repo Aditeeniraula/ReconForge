@@ -1,0 +1,110 @@
+{
+  "target": "127.0.0.1",
+  "resolved_ip": "127.0.0.1",
+  "scanned_at": "2026-08-07T12:10:05.397843+00:00",
+  "ports": [
+    {
+      "port": 2222,
+      "state": "open",
+      "service": "ssh",
+      "product": "OpenSSH",
+      "version": "7.4",
+      "banner": "SSH-2.0-OpenSSH_7.4",
+      "tls": null,
+      "http": null,
+      "latency_ms": 1.1408000136725605
+    },
+    {
+      "port": 6380,
+      "state": "open",
+      "service": "redis",
+      "product": "Redis",
+      "version": null,
+      "banner": "-ERR wrong number of arguments for 'get' command",
+      "tls": null,
+      "http": null,
+      "latency_ms": 0.8384999819099903
+    },
+    {
+      "port": 8088,
+      "state": "open",
+      "service": "http",
+      "product": "nginx",
+      "version": "1.18.0",
+      "banner": "HTTP/1.1 200 OK\r\nServer: nginx/1.18.0\r\nContent-Type: text/html\r\nX-Powered-By: PHP/7.2.1\r\nConnection: close\r\n\r\n<html><head><title>Acme Intranet Portal</title></head><body><h1>Internal</h1></body></html>",
+      "tls": null,
+      "http": {
+        "status": "HTTP/1.1 200 OK",
+        "server": "nginx/1.18.0",
+        "title": "Acme Intranet Portal",
+        "tech": [
+          "PHP",
+          "nginx"
+        ],
+        "missing_security_headers": [
+          "content-security-policy",
+          "x-frame-options",
+          "x-content-type-options",
+          "referrer-policy"
+        ],
+        "powered_by": "PHP/7.2.1"
+      },
+      "latency_ms": 0.5984000163152814
+    }
+  ],
+  "findings": [
+    {
+      "title": "Redis exposed without authentication",
+      "severity": "high",
+      "port": 6380,
+      "service": "redis",
+      "evidence": "-ERR wrong number of arguments for 'get' command",
+      "recommendation": "Bind Redis to localhost, require a password, and enable protected-mode.",
+      "references": [
+        "https://redis.io/docs/management/security/"
+      ],
+      "cve": null
+    },
+    {
+      "title": "Outdated OpenSSH (username enumeration class)",
+      "severity": "medium",
+      "port": 2222,
+      "service": "ssh",
+      "evidence": "OpenSSH 7.4 <= 7.7",
+      "recommendation": "Upgrade OpenSSH to 8.x+ and disable password auth in favour of keys.",
+      "references": [
+        "https://nvd.nist.gov/vuln/detail/CVE-2018-15473"
+      ],
+      "cve": "CVE-2018-15473"
+    },
+    {
+      "title": "Missing HTTP security headers (4)",
+      "severity": "medium",
+      "port": 8088,
+      "service": "http",
+      "evidence": "Absent: content-security-policy, x-frame-options, x-content-type-options, referrer-policy",
+      "recommendation": "Add the missing hardening headers at the web server or app layer.",
+      "references": [
+        "https://owasp.org/www-project-secure-headers/"
+      ],
+      "cve": null
+    },
+    {
+      "title": "Outdated nginx",
+      "severity": "low",
+      "port": 8088,
+      "service": "http",
+      "evidence": "nginx 1.18.0 <= 1.20.0",
+      "recommendation": "Update nginx to a current stable release and review CVEs for the running version.",
+      "references": [
+        "https://nginx.org/en/security_advisories.html"
+      ],
+      "cve": null
+    }
+  ],
+  "summary": {
+    "open_ports": 3,
+    "findings": 4,
+    "max_severity": "high"
+  }
+}

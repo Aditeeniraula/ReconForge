@@ -1,0 +1,20 @@
+[project]
+name = "reconforge"
+version = "1.0.0"
+description = "Async network recon & vulnerability-assessment framework for authorized security testing"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+test = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[project.scripts]
+reconforge = "reconforge.cli:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

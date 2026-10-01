@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReconForge — 127.0.0.1</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 15px/1.5 system-ui, sans-serif; margin: 0; background:#f6f7f9; color:#1a202c; }
+  @media (prefers-color-scheme: dark) { body { background:#14161a; color:#e4e6eb; }
+    .panel { background:#1d2027 !important; } th { background:#242832 !important; } }
+  header { background:linear-gradient(120deg,#1a2b4a,#2b1a4a); color:#fff; padding:28px 32px; }
+  header h1 { margin:0 0 4px; font-size:22px; letter-spacing:.5px; }
+  header .meta { opacity:.85; font-size:13px; }
+  .wrap { max-width:960px; margin:0 auto; padding:24px 32px; }
+  .stat-row { display:flex; gap:14px; margin:-40px 0 24px; }
+  .stat { flex:1; background:#fff; border-radius:10px; padding:16px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+  .panel { background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .stat .n { font-size:26px; font-weight:700; } .stat .l { font-size:12px; opacity:.7; text-transform:uppercase; letter-spacing:.5px; }
+  h2 { font-size:16px; margin:28px 0 12px; }
+  table { width:100%; border-collapse:collapse; overflow:hidden; border-radius:10px; }
+  th,td { text-align:left; padding:9px 14px; font-size:13px; }
+  th { background:#eef0f4; } tr:nth-child(even) td { background:rgba(128,128,128,.05); }
+  .mono { font-family:ui-monospace,monospace; } .dim { opacity:.6; }
+  .card { background:inherit; border:1px solid rgba(128,128,128,.2); border-left-width:5px;
+    border-radius:8px; padding:14px 16px; margin:10px 0; }
+  .card-head { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .sev { color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; }
+  .title { font-weight:600; } .port { opacity:.6; font-size:12px; font-family:ui-monospace,monospace; }
+  .cve { font-size:11px; background:#333; color:#fff; padding:2px 6px; border-radius:4px; }
+  .evidence,.fix { font-size:13px; margin-top:6px; } .evidence b,.fix b { opacity:.7; }
+  .refs a { font-size:11px; color:#3182ce; margin-right:8px; word-break:break-all; }
+  .badge-high { text-transform:uppercase; }
+  footer { text-align:center; font-size:12px; opacity:.5; padding:24px; }
+</style></head>
+<body>
+<header>
+  <h1>🛡 ReconForge Assessment</h1>
+  <div class="meta">127.0.0.1 → 127.0.0.1 · 2026-08-07 12:10 UTC</div>
+</header>
+<div class="wrap">
+  <div class="stat-row">
+    <div class="stat"><div class="n">3</div><div class="l">Open ports</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Findings</div></div>
+    <div class="stat"><div class="n" style="color:#d9480f">HIGH</div><div class="l">Max severity</div></div>
+  </div>
+  <h2>Open ports &amp; services</h2>
+  <div class="panel"><table>
+    <tr><th>Port</th><th>Service</th><th>Product</th><th>Detail</th></tr>
+    <tr><td class='mono'>2222/tcp</td><td>ssh</td><td>OpenSSH 7.4</td><td class='dim'></td></tr><tr><td class='mono'>6380/tcp</td><td>redis</td><td>Redis</td><td class='dim'></td></tr><tr><td class='mono'>8088/tcp</td><td>http</td><td>nginx 1.18.0</td><td class='dim'>title: Acme Intranet Portal</td></tr>
+  </table></div>
+  <h2>Findings</h2>
+  
+        <div class="card" style="border-left-color:#d9480f">
+          <div class="card-head">
+            <span class="sev" style="background:#d9480f">HIGH</span>
+            <span class="title">Redis exposed without authentication</span>
+            <span class="port">:6380 redis</span>
+          </div>
+          <div class="evidence"><b>Evidence:</b> -ERR wrong number of arguments for &#x27;get&#x27; command</div>
+          <div class="fix"><b>Recommendation:</b> Bind Redis to localhost, require a password, and enable protected-mode.</div>
+          <div class='refs'><a href='https://redis.io/docs/management/security/'>https://redis.io/docs/management/security/</a> </div>
+        </div>
+        <div class="card" style="border-left-color:#c9820a">
+          <div class="card-head">
+            <span class="sev" style="background:#c9820a">MEDIUM</span>
+            <span class="title">Outdated OpenSSH (username enumeration class)</span><span class='cve'>CVE-2018-15473</span>
+            <span class="port">:2222 ssh</span>
+          </div>
+          <div class="evidence"><b>Evidence:</b> OpenSSH 7.4 &lt;= 7.7</div>
+          <div class="fix"><b>Recommendation:</b> Upgrade OpenSSH to 8.x+ and disable password auth in favour of keys.</div>
+          <div class='refs'><a href='https://nvd.nist.gov/vuln/detail/CVE-2018-15473'>https://nvd.nist.gov/vuln/detail/CVE-2018-15473</a> </div>
+        </div>
+        <div class="card" style="border-left-color:#c9820a">
+          <div class="card-head">
+            <span class="sev" style="background:#c9820a">MEDIUM</span>
+            <span class="title">Missing HTTP security headers (4)</span>
+            <span class="port">:8088 http</span>
+          </div>
+          <div class="evidence"><b>Evidence:</b> Absent: content-security-policy, x-frame-options, x-content-type-options, referrer-policy</div>
+          <div class="fix"><b>Recommendation:</b> Add the missing hardening headers at the web server or app layer.</div>
+          <div class='refs'><a href='https://owasp.org/www-project-secure-headers/'>https://owasp.org/www-project-secure-headers/</a> </div>
+        </div>
+        <div class="card" style="border-left-color:#2b6cb0">
+          <div class="card-head">
+            <span class="sev" style="background:#2b6cb0">LOW</span>
+            <span class="title">Outdated nginx</span>
+            <span class="port">:8088 http</span>
+          </div>
+          <div class="evidence"><b>Evidence:</b> nginx 1.18.0 &lt;= 1.20.0</div>
+          <div class="fix"><b>Recommendation:</b> Update nginx to a current stable release and review CVEs for the running version.</div>
+          <div class='refs'><a href='https://nginx.org/en/security_advisories.html'>https://nginx.org/en/security_advisories.html</a> </div>
+        </div>
+</div>
+<footer>Generated by ReconForge 2026 · authorized security testing only</footer>
+</body></html>
